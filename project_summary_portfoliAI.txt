@@ -1,0 +1,142 @@
+
+🧠 CURSOR MASTER PROMPT — Resume-to-Website AI Generator (Gemini API)
+
+💡 Project Title:
+PortfoliAI – Instantly turn your story into a stunning personal website using Gemini
+
+🔧 Objective:
+Build a fully responsive, professional-grade web application that:
+- Collects resume-style information through a modern multi-step form
+- Allows users to upload media + reference a sample site
+- Constructs a structured prompt for the Gemini API
+- Sends this prompt to Gemini and gets full website code (HTML/CSS/JS)
+- Renders a live preview of the code (like CodeSandbox)
+- Lets the user download the site code as a .zip file
+- Later allows Gemini-powered chatbot debugging help
+
+⚙️ Tech Stack:
+- Frontend: Next.js (App Router), Tailwind CSS, shadcn/ui, Framer Motion
+- Form Handling: React Hook Form + Zod
+- API Calls: Gemini Pro via @google/generative-ai
+- Preview Rendering: Monaco Editor or Sandpack
+- Downloads: JSZip + FileSaver.js
+- File Uploads: Supabase or Firebase Storage (or Base64 for MVP)
+
+🎨 UI Design Directive (Inspired by gsap.com)
+Match the sleek, interactive, high-contrast look of gsap.com:
+- Bold typography (dark theme, neon/gradient elements)
+- Subtle 3D parallax/tilt motion on cards and hero sections
+- Animated transitions between steps (Framer Motion)
+- Interactive code preview box with clean tabs
+- Navbar with glowing hover states and active highlight
+- Mobile-first responsive layout
+- Sticky footer with contact/socials
+
+🧱 Pages Required
+
+1. / – Landing Page
+- Animated hero section: “Turn Your Resume Into a Website — Instantly.”
+- CTA button: “Get Started”
+- Section highlights: “Upload. Customize. Deploy.”, “Powered by Gemini. No code needed.”
+- Design like gsap.com homepage
+
+2. /form – Multi-Step Resume Questionnaire
+- Step 1: Name, tagline, short bio
+- Step 2: Work history (position, company, duration, bullets)
+- Step 3: Projects (title, description, tech stack)
+- Step 4: Skills + Education
+- Step 5: Media uploader (image files, optional video link)
+- Step 6: Reference website URL
+- Final Step: "Generate My Site" button
+
+➕ UI Notes:
+- Use shadcn/ui Card, Stepper, Textarea, Combobox, Dropzone
+- Animate transitions between steps with Framer Motion
+- Floating label UI and subtle depth on fields
+
+3. /preview – Code Output & Live Website Preview
+- Show loading animation while code is being generated
+- Use Monaco Editor or Sandpack to display code with syntax highlighting
+- Live rendering of HTML in iframe or separate pane
+- Tabs to switch between HTML, CSS, JS
+
+4. /download – Download Section
+- Show preview screenshot or embedded live view
+- “Download ZIP” button
+
+5. /instructions – How to Host
+- Markdown-style guide: Vercel, Netlify, GitHub Pages
+- Link to Gemini chatbot help
+
+🔄 Data Flow Logic
+1. On form completion, format user inputs into structured prompt
+2. Call Gemini Pro using API key (store in .env file)
+3. Receive code response (HTML/CSS/JS)
+4. Render preview in /preview
+5. Bundle code into .zip and allow download
+
+🧠 Gemini Prompt Function (example logic Cursor should implement):
+
+function generateGeminiPrompt(userInput: FormData, referenceSite: string) {
+  return `
+You are an AI web developer.
+Create a professional, mobile-responsive personal portfolio website using HTML, CSS, and JavaScript. 
+Base the layout/style loosely on: ${referenceSite}.
+Here is the user’s info:
+Name: ${userInput.name}
+Title: ${userInput.title}
+About: ${userInput.bio}
+Skills: ${userInput.skills.join(", ")}
+Work History:
+${userInput.workHistory.map(w => `- ${w.position} at ${w.company} (${w.years}): ${w.bullets.join("; ")}`).join("
+")}
+Projects:
+${userInput.projects.map(p => `- ${p.title}: ${p.description} [${p.stack.join(", ")}]`).join("
+")}
+Education: ${userInput.education}
+Uploaded Media: ${userInput.media.map(m => m.url).join(", ")}
+Generate clean, readable code with comments. Structure in a single HTML file with inline CSS/JS if possible.
+`;
+}
+
+🔐 API Setup
+Cursor should write all logic for API integration, and just leave a placeholder for you to insert your Gemini key:
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+
+🧠 Gemini Response Handling
+- Split code into sections (HTML, CSS, JS) using regex or prompts
+- Handle token overflows if needed by chunking requests
+
+✅ Final Features Cursor Should Implement
+- Clean, animated, GSAP-style UI with Tailwind + Framer Motion
+- Multi-step questionnaire with form validation
+- Gemini prompt engine + API call
+- Live code preview with editor + iframe
+- Zip download of final generated code
+- Instruction page
+- Gemini chatbot stub (leave endpoint for future)
+
+🧪 Test Flow (Cursor should simulate):
+1. Fill out questionnaire with test data
+2. Send to Gemini mock function if API key not inserted
+3. Preview response in /preview
+4. Download works
+5. Instructions page is accessible
+
+📦 Deliverables (for Cursor to generate)
+- Full Next.js repo (with App Router)
+- .env.example file for Gemini key
+- /components/ folder with:
+  - FormSteps.tsx
+  - PreviewPanel.tsx
+  - CodeEditor.tsx
+  - DownloadButton.tsx
+- /lib/ with:
+  - promptBuilder.ts
+  - geminiClient.ts
+  - zipHelper.ts
+- Tailwind config with extended fonts/colors
+- GSAP-style styling with gradients, depth, transitions
+
+🧑‍💻 Final Note for Cursor:
+Build this as if it’s a production SaaS MVP launching next week. Prioritize clean UX, dark theme, mobile responsiveness, and minimal user friction. Gemini key will be added later manually.
