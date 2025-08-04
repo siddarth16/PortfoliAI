@@ -3,32 +3,69 @@ import { UserFormData, GeneratedWebsite } from './types';
 
 class GeminiClient {
   private genAI: GoogleGenerativeAI | null = null;
+  private apiKey: string | null = null;
 
   constructor() {
-    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-    if (apiKey) {
-      this.genAI = new GoogleGenerativeAI(apiKey);
+    // Try both client-side and server-side environment variables
+    this.apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY || null;
+    
+    if (this.apiKey) {
+      this.genAI = new GoogleGenerativeAI(this.apiKey);
+      console.log('✅ Gemini API initialized successfully');
+    } else {
+      console.warn('⚠️ No Gemini API key found. Checked NEXT_PUBLIC_GEMINI_API_KEY and GEMINI_API_KEY');
     }
   }
 
   async generateWebsite(userData: UserFormData): Promise<GeneratedWebsite> {
-    if (!this.genAI) {
-      // Mock response for development when API key is not set
+    if (!this.genAI || !this.apiKey) {
+      console.log('🔑 No API key configured - returning mock website');
       return this.getMockWebsite(userData);
     }
 
     try {
-      const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
+      console.log('🚀 Starting Gemini 2.5 Flash generation...');
+      
+      // Use the latest Gemini 2.5 Flash model (hybrid reasoning)
+      const model = this.genAI.getGenerativeModel({ 
+        model: 'gemini-2.5-flash',
+        generationConfig: {
+          temperature: 0.7,
+          topP: 0.8,
+          topK: 40,
+          maxOutputTokens: 8192,
+        },
+      });
+      
       const prompt = this.buildPrompt(userData);
+      console.log('📝 Generated prompt length:', prompt.length, 'characters');
       
       const result = await model.generateContent(prompt);
       const response = await result.response;
+      
+      if (!response) {
+        throw new Error('No response received from Gemini API');
+      }
+      
       const text = response.text();
+      console.log('✅ Received response from Gemini, length:', text.length, 'characters');
+      
+      if (!text || text.length < 100) {
+        throw new Error('Response too short or empty from Gemini API');
+      }
       
       return this.parseGeneratedCode(text);
-    } catch (error) {
-      console.error('Error generating website:', error);
-      return this.getMockWebsite(userData);
+    } catch (error: unknown) {
+      console.error('❌ Gemini API Error Details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        status: (error as { status?: number }).status,
+        statusText: (error as { statusText?: string }).statusText,
+        details: (error as { details?: unknown }).details,
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      
+      // Return mock with detailed error info for debugging
+      return this.getMockWebsiteWithError(userData, error);
     }
   }
 
@@ -116,6 +153,78 @@ Generate a unique, modern portfolio that stands out and represents the user prof
       js: '',  // JS is inline in the HTML
       preview: html
     };
+  }
+
+  private getMockWebsiteWithError(userData: UserFormData, error: unknown): GeneratedWebsite {
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${userData.name} - Portfolio (Debug Mode)</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .error { background: #ff4444; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .debug { background: #333; padding: 15px; border-radius: 8px; margin: 20px 0; font-family: monospace; }
+        .highlight { color: #ffd700; font-weight: bold; }
+        .steps { background: #2a2a2a; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .steps ol { margin: 10px 0; }
+        .steps li { margin: 8px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Gemini API Debug Mode</h1>
+        <h2>Portfolio for <span class="highlight">${userData.name}</span></h2>
+        
+        <div class="error">
+            <h3>❌ API Error Detected</h3>
+            <p><strong>Error:</strong> ${error instanceof Error ? error.message : 'Unknown error'}</p>
+            ${(error as { status?: number }).status ? `<p><strong>Status:</strong> ${(error as { status?: number }).status}</p>` : ''}
+            ${(error as { details?: unknown }).details ? `<p><strong>Details:</strong> ${JSON.stringify((error as { details?: unknown }).details)}</p>` : ''}
+        </div>
+
+        <div class="steps">
+            <h3>🔧 How to Fix This:</h3>
+            <ol>
+                <li><strong>Get a Gemini API Key:</strong>
+                    <br>• Go to <a href="https://ai.google.dev/" target="_blank" style="color: #4fc3f7;">Google AI Studio</a>
+                    <br>• Click "Get API Key"
+                    <br>• Create a new project or select existing
+                    <br>• Copy your API key
+                </li>
+                <li><strong>Add to Environment:</strong>
+                    <br>• Create <code>.env.local</code> file in your project root
+                    <br>• Add: <code>NEXT_PUBLIC_GEMINI_API_KEY=your_api_key_here</code>
+                    <br>• Restart your development server
+                </li>
+                <li><strong>Verify Setup:</strong>
+                    <br>• Check browser console for "✅ Gemini API initialized successfully"
+                    <br>• Try generating your portfolio again
+                </li>
+            </ol>
+        </div>
+
+        <div class="debug">
+            <h3>📊 Current Data Ready for Generation:</h3>
+            <p>✓ Name: ${userData.name}</p>
+            <p>✓ Title: ${userData.title}</p>
+            <p>✓ Skills: ${userData.skills.length} skills</p>
+            <p>✓ Work Experience: ${userData.workHistory.length} entries</p>
+            <p>✓ Projects: ${userData.projects.length} projects</p>
+            <p>✓ Education: ${userData.education.length} entries</p>
+            ${userData.referenceSite ? `<p>✓ Reference Site: ${userData.referenceSite}</p>` : ''}
+        </div>
+
+        <div class="steps">
+            <p><strong>🎯 Once fixed:</strong> Your unique portfolio will be generated using Gemini 2.5 Flash with all your data!</p>
+        </div>
+    </div>
+</body>
+</html>`;
+    
+    return { html, css: '', js: '', preview: html };
   }
 
   private getMockWebsite(userData: UserFormData): GeneratedWebsite {
