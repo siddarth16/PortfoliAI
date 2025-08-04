@@ -26,6 +26,7 @@ export function WorkHistoryStep({ formData, updateFormData, onNext, onPrevious }
     formState: { errors, isValid },
     control,
     watch,
+    setValue,
   } = useForm<WorkHistoryFormData>({
     resolver: zodResolver(workHistorySchema),
     defaultValues: {
@@ -53,25 +54,27 @@ export function WorkHistoryStep({ formData, updateFormData, onNext, onPrevious }
   };
 
   const addBulletPoint = (experienceIndex: number) => {
-    const currentBullets = watchedData.workHistory[experienceIndex]?.bullets || [];
-    const newWorkHistory = [...watchedData.workHistory];
-    newWorkHistory[experienceIndex] = {
-      ...newWorkHistory[experienceIndex],
-      bullets: [...currentBullets, '']
+    const currentFields = fields[experienceIndex];
+    const newBullets = [...(currentFields.bullets || []), ''];
+    
+    // Update the specific field
+    const updatedFields = [...fields];
+    updatedFields[experienceIndex] = {
+      ...currentFields,
+      bullets: newBullets
     };
-    updateFormData({ workHistory: newWorkHistory });
+    
+    // Use setValue to update react-hook-form state
+    setValue(`workHistory.${experienceIndex}.bullets`, newBullets);
   };
 
   const removeBulletPoint = (experienceIndex: number, bulletIndex: number) => {
-    const currentBullets = watchedData.workHistory[experienceIndex]?.bullets || [];
+    const currentFields = fields[experienceIndex];
+    const currentBullets = currentFields.bullets || [];
+    
     if (currentBullets.length > 1) {
       const newBullets = currentBullets.filter((_, index) => index !== bulletIndex);
-      const newWorkHistory = [...watchedData.workHistory];
-      newWorkHistory[experienceIndex] = {
-        ...newWorkHistory[experienceIndex],
-        bullets: newBullets
-      };
-      updateFormData({ workHistory: newWorkHistory });
+      setValue(`workHistory.${experienceIndex}.bullets`, newBullets);
     }
   };
 

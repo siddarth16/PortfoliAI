@@ -2,7 +2,6 @@ export interface UserFormData {
   // Step 1: Basic Info
   name: string;
   title: string;
-  bio: string;
   
   // Step 2: Work History
   workHistory: WorkExperience[];
@@ -12,7 +11,7 @@ export interface UserFormData {
   
   // Step 4: Skills & Education
   skills: string[];
-  education: string;
+  education: Education[];
   
   // Step 5: Media
   media: MediaFile[];
@@ -34,6 +33,17 @@ export interface Project {
   stack: string[];
   url?: string;
   github?: string;
+}
+
+export interface Education {
+  school: string;
+  degree: string;
+  cgpa: string;
+  startMonth: string;
+  startYear: string;
+  endMonth: string;
+  endYear: string;
+  isPresent: boolean;
 }
 
 export interface MediaFile {

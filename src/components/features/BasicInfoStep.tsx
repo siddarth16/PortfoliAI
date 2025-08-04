@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ArrowRight } from 'lucide-react';
 import { basicInfoSchema, BasicInfoFormData } from '@/lib/formSchema';
@@ -29,7 +28,6 @@ export function BasicInfoStep({ formData, updateFormData, onNext }: BasicInfoSte
     defaultValues: {
       name: formData.name,
       title: formData.title,
-      bio: formData.bio,
     },
     mode: 'onChange',
   });
@@ -92,31 +90,7 @@ export function BasicInfoStep({ formData, updateFormData, onNext }: BasicInfoSte
           )}
         </div>
 
-        <div>
-          <Label htmlFor="bio" className="text-lg font-medium">
-            Professional Bio *
-          </Label>
-          <Textarea
-            id="bio"
-            {...register('bio')}
-            onChange={(e) => {
-              register('bio').onChange(e);
-              handleFieldChange('bio', e.target.value);
-            }}
-            placeholder="Write a compelling bio that showcases your experience, passion, and what makes you unique as a professional..."
-            className="mt-2 min-h-32 text-lg"
-          />
-          <div className="flex justify-between items-center mt-1">
-            <div>
-              {errors.bio && (
-                <p className="text-sm text-destructive">{errors.bio.message}</p>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {watchedData.bio?.length || 0}/500 characters
-            </p>
-          </div>
-        </div>
+
       </motion.div>
 
       <motion.div
@@ -139,7 +113,7 @@ export function BasicInfoStep({ formData, updateFormData, onNext }: BasicInfoSte
       </motion.div>
 
       {/* Progress indicator */}
-      {watchedData.name && watchedData.title && watchedData.bio && (
+      {watchedData.name && watchedData.title && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}

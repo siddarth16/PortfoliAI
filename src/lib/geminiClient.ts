@@ -33,47 +33,73 @@ class GeminiClient {
   }
 
   private buildPrompt(userData: UserFormData): string {
-    return `
-You are an expert web developer. Create a professional, mobile-responsive personal portfolio website using HTML, CSS, and JavaScript.
+    const educationText = userData.education.map(edu => {
+      const endDate = edu.isPresent ? 'Present' : `${edu.endMonth}/${edu.endYear}`;
+      return `- ${edu.degree} from ${edu.school} (${edu.startMonth}/${edu.startYear} - ${endDate}) - CGPA: ${edu.cgpa}`;
+    }).join('\n');
 
-Base the layout/style loosely on: ${userData.referenceSite || 'modern portfolio websites'}.
+    const projectsText = userData.projects.length > 0 ? userData.projects.map(p => 
+      `- ${p.title}: ${p.description} [${p.stack.join(', ')}]${p.url ? ` - Live: ${p.url}` : ''}${p.github ? ` - GitHub: ${p.github}` : ''}`
+    ).join('\n') : 'No projects provided yet.';
+
+    return `
+You are a professional web developer tasked with creating a stunning, modern personal portfolio website. This website should be production-ready and showcase the user's professional brand effectively.
+
+IMPORTANT: Create a completely unique design. Do NOT use templates. Generate original, modern code.
 
 User Information:
 - Name: ${userData.name}
-- Title: ${userData.title}
-- About: ${userData.bio}
+- Professional Title: ${userData.title}
 - Skills: ${userData.skills.join(', ')}
 
-Work History:
+Work Experience:
 ${userData.workHistory.map(w => 
-  `- ${w.position} at ${w.company} (${w.duration}): ${w.bullets.join('; ')}`
+  `- ${w.position} at ${w.company} (${w.duration})\n  Achievements: ${w.bullets.join('; ')}`
 ).join('\n')}
 
 Projects:
-${userData.projects.map(p => 
-  `- ${p.title}: ${p.description} [${p.stack.join(', ')}]${p.url ? ` - ${p.url}` : ''}${p.github ? ` - GitHub: ${p.github}` : ''}`
-).join('\n')}
+${projectsText}
 
-Education: ${userData.education}
+Education:
+${educationText}
 
-Requirements:
-1. Create a single HTML file with inline CSS and JavaScript
-2. Use modern CSS Grid and Flexbox for layout
-3. Include smooth scrolling and hover effects
-4. Make it mobile-responsive
-5. Use a dark theme with gradient accents
-6. Include sections: Hero, About, Skills, Experience, Projects, Contact
-7. Add subtle animations and transitions
-8. Use proper semantic HTML
-9. Include meta tags for SEO
+Design Inspiration: ${userData.referenceSite || 'Modern, clean design with dark theme and gradient accents'}
 
-Please structure your response as:
-<!DOCTYPE html>
-<html>
-<!-- Your complete website code here -->
-</html>
+REQUIREMENTS:
+1. Create a single HTML file with embedded CSS and JavaScript
+2. Use a modern dark theme with gradient accents (purple/blue/pink gradients)
+3. Include smooth scrolling animations and hover effects
+4. Make it fully responsive (mobile-first approach)
+5. Use CSS Grid and Flexbox for layout
+6. Include these sections in order:
+   - Header with navigation
+   - Hero section with name, title, and call-to-action
+   - About section with a professional summary
+   - Skills section with visual skill indicators
+   - Experience section with timeline or cards
+   - Projects section with project showcases
+   - Education section
+   - Contact section with links
+7. Add subtle CSS animations and transitions
+8. Use proper semantic HTML5 elements
+9. Include responsive navigation (hamburger menu on mobile)
+10. Add proper meta tags for SEO
+11. Use modern fonts (Google Fonts)
+12. Include Font Awesome or similar icons
 
-Generate clean, readable code with comments explaining key sections.
+DESIGN STYLE:
+- Dark background with gradient overlays
+- Cards with subtle shadows and hover effects
+- Smooth transitions and animations
+- Modern typography with good hierarchy
+- Professional color scheme
+- Clean, minimalist design
+- Interactive elements
+
+OUTPUT FORMAT:
+Provide ONLY the complete HTML code starting with <!DOCTYPE html> and ending with </html>. Do not include any explanations or markdown formatting.
+
+Generate a unique, modern portfolio that stands out and represents the user professionally.
 `;
   }
 
@@ -92,12 +118,13 @@ Generate clean, readable code with comments explaining key sections.
   }
 
   private getMockWebsite(userData: UserFormData): GeneratedWebsite {
+    // When API key is not provided, return a notice instead of a template
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${userData.name} - Portfolio</title>
+    <title>${userData.name} - Portfolio (Preview)</title>
     <style>
         * {
             margin: 0;
@@ -110,192 +137,80 @@ Generate clean, readable code with comments explaining key sections.
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             color: #ffffff;
             line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        header {
-            padding: 2rem 0;
+            max-width: 600px;
             text-align: center;
+            padding: 2rem;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        .hero h1 {
-            font-size: 3rem;
+        h1 {
+            font-size: 2.5rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
         }
         
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .section {
-            padding: 4rem 0;
-        }
-        
-        .section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
+        h2 {
             color: #667eea;
+            margin-bottom: 1rem;
         }
         
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
         }
         
-        .skill-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
+        .info-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
             border-radius: 10px;
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-        
-        .skill-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        }
-        
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-        
-        .project-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            border-radius: 15px;
-            transition: transform 0.3s ease;
-        }
-        
-        .project-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
-        }
-        
-        .work-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            margin: 1rem 0;
-            border-radius: 10px;
+            margin: 1.5rem 0;
             border-left: 4px solid #667eea;
         }
         
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .section h2 {
-                font-size: 2rem;
-            }
-            
-            .skills-grid,
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="hero">
-                <h1>${userData.name}</h1>
-                <p>${userData.title}</p>
-                <p>${userData.bio}</p>
-            </div>
+    <div class="container">
+        <h1>AI Portfolio Generator</h1>
+        <h2>Preview Mode</h2>
+        <p>Your portfolio is ready to be generated for <span class="highlight">${userData.name}</span></p>
+        
+        <div class="info-box">
+            <p><strong>To generate your actual portfolio:</strong></p>
+            <p>Add your AI API key to the environment variables and your unique, personalized website will be created using advanced AI technology.</p>
         </div>
-    </header>
-
-    <main>
-        <section class="section">
-            <div class="container">
-                <h2>Skills</h2>
-                <div class="skills-grid">
-                    ${userData.skills.map(skill => `<div class="skill-item">${skill}</div>`).join('')}
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="container">
-                <h2>Experience</h2>
-                ${userData.workHistory.map(work => `
-                    <div class="work-item">
-                        <h3>${work.position} at ${work.company}</h3>
-                        <p><strong>${work.duration}</strong></p>
-                        <ul>
-                            ${work.bullets.map(bullet => `<li>${bullet}</li>`).join('')}
-                        </ul>
-                    </div>
-                `).join('')}
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="container">
-                <h2>Projects</h2>
-                <div class="projects-grid">
-                    ${userData.projects.map(project => `
-                        <div class="project-card">
-                            <h3>${project.title}</h3>
-                            <p>${project.description}</p>
-                            <p><strong>Tech Stack:</strong> ${project.stack.join(', ')}</p>
-                            ${project.url ? `<a href="${project.url}" target="_blank">View Project</a>` : ''}
-                            ${project.github ? `<a href="${project.github}" target="_blank">GitHub</a>` : ''}
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="container">
-                <h2>Education</h2>
-                <p>${userData.education}</p>
-            </div>
-        </section>
-    </main>
-
-    <script>
-        // Smooth scrolling for any future navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Add some interactive animations
-        const cards = document.querySelectorAll('.project-card, .skill-item, .work-item');
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.background = 'rgba(102, 126, 234, 0.2)';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.style.background = 'rgba(255, 255, 255, 0.1)';
-            });
-        });
-    </script>
+        
+        <p>The AI will create a completely custom website based on:</p>
+        <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+            <li>✓ Your professional title: ${userData.title}</li>
+            <li>✓ ${userData.skills.length} technical skills</li>
+            <li>✓ ${userData.workHistory.length} work experience entries</li>
+            <li>✓ ${userData.projects.length} project showcases</li>
+            <li>✓ ${userData.education.length} education entries</li>
+            ${userData.referenceSite ? `<li>✓ Design inspired by: ${userData.referenceSite}</li>` : ''}
+        </ul>
+        
+        <div class="info-box">
+            <p><strong>No templates!</strong> Every website is uniquely generated by AI to match your professional brand.</p>
+        </div>
+    </div>
 </body>
 </html>`;
 

@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "PortfoliAI - Turn Your Resume Into a Website Instantly",
-  description: "Instantly transform your resume into a stunning personal website using AI. Powered by Gemini. No coding required.",
-  keywords: ["portfolio", "resume", "website generator", "AI", "Gemini", "personal website"],
+  description: "Instantly transform your resume into a stunning personal website using AI. No coding required.",
+  keywords: ["portfolio", "resume", "website generator", "AI", "personal website"],
   authors: [{ name: "PortfoliAI" }],
   viewport: "width=device-width, initial-scale=1",
 };

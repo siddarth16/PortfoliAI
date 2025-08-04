@@ -114,7 +114,7 @@ export default function HomePage() {
               Upload. Customize. Deploy.
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Powered by Gemini AI. Your professional website is just minutes away.
+              Powered by Advanced AI. Your professional website is just minutes away.
             </p>
           </motion.div>
 
@@ -123,7 +123,7 @@ export default function HomePage() {
               {
                 icon: Zap,
                 title: 'AI-Powered Generation',
-                description: 'Advanced Gemini AI analyzes your resume and creates a custom website tailored to your career.',
+                description: 'Advanced AI analyzes your resume and creates a custom website tailored to your career.',
                 delay: 0.1
               },
               {
@@ -184,7 +184,7 @@ export default function HomePage() {
               <Button 
                 asChild 
                 size="lg" 
-                className="text-lg px-8 py-6 bg-white text-primary hover:bg-white/90 glow-lg"
+                className="text-lg px-8 py-6 bg-white text-black hover:bg-white/90 glow-lg font-semibold"
               >
                 <Link href="/form" className="flex items-center">
                   Start Building Now
@@ -211,7 +211,7 @@ export default function HomePage() {
               <Link href="/instructions" className="hover:text-foreground transition-colors">
                 Deploy Guide
               </Link>
-              <span className="text-sm">Powered by Gemini AI</span>
+              <span className="text-sm">Powered by AI</span>
             </div>
           </div>
         </div>

@@ -21,11 +21,10 @@ const TOTAL_STEPS = 6;
 const initialFormData: UserFormData = {
   name: '',
   title: '',
-  bio: '',
   workHistory: [],
   projects: [],
   skills: [],
-  education: '',
+  education: [],
   media: [],
   referenceSite: '',
 };

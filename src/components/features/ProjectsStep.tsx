@@ -26,12 +26,11 @@ export function ProjectsStep({ formData, updateFormData, onNext, onPrevious }: P
     formState: { errors, isValid },
     control,
     watch,
+    setValue,
   } = useForm<ProjectsFormData>({
     resolver: zodResolver(projectsSchema),
     defaultValues: {
-      projects: formData.projects.length > 0 ? formData.projects : [
-        { title: '', description: '', stack: [''], url: '', github: '' }
-      ],
+      projects: formData.projects.length > 0 ? formData.projects : [],
     },
     mode: 'onChange',
   });
@@ -60,25 +59,18 @@ export function ProjectsStep({ formData, updateFormData, onNext, onPrevious }: P
   };
 
   const addTechStack = (projectIndex: number) => {
-    const currentStack = watchedData.projects[projectIndex]?.stack || [];
-    const newProjects = [...watchedData.projects];
-    newProjects[projectIndex] = {
-      ...newProjects[projectIndex],
-      stack: [...currentStack, '']
-    };
-    updateFormData({ projects: newProjects });
+    const currentFields = fields[projectIndex];
+    const newStack = [...(currentFields.stack || []), ''];
+    setValue(`projects.${projectIndex}.stack`, newStack);
   };
 
   const removeTechStack = (projectIndex: number, stackIndex: number) => {
-    const currentStack = watchedData.projects[projectIndex]?.stack || [];
+    const currentFields = fields[projectIndex];
+    const currentStack = currentFields.stack || [];
+    
     if (currentStack.length > 1) {
       const newStack = currentStack.filter((_, index) => index !== stackIndex);
-      const newProjects = [...watchedData.projects];
-      newProjects[projectIndex] = {
-        ...newProjects[projectIndex],
-        stack: newStack
-      };
-      updateFormData({ projects: newProjects });
+      setValue(`projects.${projectIndex}.stack`, newStack);
     }
   };
 
@@ -227,7 +219,7 @@ export function ProjectsStep({ formData, updateFormData, onNext, onPrevious }: P
           className="w-full border-dashed border-2 py-6 text-lg"
         >
           <Plus className="h-5 w-5 mr-2" />
-          Add Another Project
+          {fields.length === 0 ? 'Add Your First Project' : 'Add Another Project'}
         </Button>
       </motion.div>
 
@@ -251,7 +243,7 @@ export function ProjectsStep({ formData, updateFormData, onNext, onPrevious }: P
         <Button
           type="submit"
           size="lg"
-          disabled={!isValid}
+          disabled={false}
           className="px-8 py-3 text-lg glow-sm group"
         >
           Continue

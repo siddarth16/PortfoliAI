@@ -4,7 +4,6 @@ import { z } from 'zod';
 export const basicInfoSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   title: z.string().min(2, 'Title must be at least 2 characters'),
-  bio: z.string().min(10, 'Bio must be at least 10 characters').max(500, 'Bio must be less than 500 characters'),
 });
 
 // Step 2: Work History
@@ -29,13 +28,25 @@ export const projectSchema = z.object({
 });
 
 export const projectsSchema = z.object({
-  projects: z.array(projectSchema).min(1, 'At least one project is required'),
+  projects: z.array(projectSchema).optional().default([]),
+});
+
+// Education
+export const educationSchema = z.object({
+  school: z.string().min(2, 'School/University is required'),
+  degree: z.string().min(2, 'Course/Degree is required'),
+  cgpa: z.string().min(1, 'CGPA/Percentage is required'),
+  startMonth: z.string().min(1, 'Start month is required'),
+  startYear: z.string().min(4, 'Start year is required'),
+  endMonth: z.string().optional(),
+  endYear: z.string().optional(),
+  isPresent: z.boolean().default(false),
 });
 
 // Step 4: Skills & Education
 export const skillsEducationSchema = z.object({
   skills: z.array(z.string().min(1, 'Skill cannot be empty')).min(1, 'At least one skill is required'),
-  education: z.string().min(2, 'Education information is required'),
+  education: z.array(educationSchema).min(1, 'At least one education entry is required'),
 });
 
 // Step 5: Media (optional)
