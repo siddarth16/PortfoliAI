@@ -32,11 +32,11 @@ class GeminiClient {
     }
 
     try {
-      console.log('🚀 Starting Gemini 2.5 Flash generation...');
+      console.log('🚀 Starting Gemini 1.5 Flash generation...');
       
-      // Use the latest Gemini 2.5 Flash model (hybrid reasoning)
+      // Use Gemini 1.5 Flash (stable and widely available)
       const model = this.genAI.getGenerativeModel({ 
-        model: 'gemini-2.5-flash',
+        model: 'gemini-1.5-flash',
         generationConfig: {
           temperature: 0.7,
           topP: 0.8,
