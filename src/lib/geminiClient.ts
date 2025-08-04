@@ -43,23 +43,61 @@ class GeminiClient {
           topK: 40,
           maxOutputTokens: 8192,
         },
+        safetySettings: [
+          {
+            category: 'HARM_CATEGORY_HARASSMENT',
+            threshold: 'BLOCK_NONE',
+          },
+          {
+            category: 'HARM_CATEGORY_HATE_SPEECH',
+            threshold: 'BLOCK_NONE',
+          },
+          {
+            category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+            threshold: 'BLOCK_NONE',
+          },
+          {
+            category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+            threshold: 'BLOCK_NONE',
+          },
+        ],
       });
       
       const prompt = this.buildPrompt(userData);
       console.log('📝 Generated prompt length:', prompt.length, 'characters');
+      console.log('📋 Prompt preview (first 500 chars):', prompt.substring(0, 500));
       
+      // Check for potentially problematic content
+      if (prompt.length > 100000) {
+        console.warn('⚠️ Prompt is very long:', prompt.length, 'characters - this might cause issues');
+      }
+      
+      console.log('📞 Calling Gemini API...');
       const result = await model.generateContent(prompt);
+      console.log('📨 Raw result received:', !!result);
+      
       const response = await result.response;
+      console.log('📋 Response object:', !!response);
       
       if (!response) {
         throw new Error('No response received from Gemini API');
       }
       
+      // Check if response has candidates
+      const candidates = response.candidates;
+      console.log('👥 Response candidates:', candidates?.length || 0);
+      
+      if (!candidates || candidates.length === 0) {
+        throw new Error('No candidates in Gemini response - possible content policy violation');
+      }
+      
       const text = response.text();
       console.log('✅ Received response from Gemini, length:', text.length, 'characters');
+      console.log('📝 Response preview:', text.substring(0, 100), '...');
       
       if (!text || text.length < 100) {
-        throw new Error('Response too short or empty from Gemini API');
+        console.error('🔍 Full response object:', JSON.stringify(response, null, 2));
+        throw new Error(`Response too short or empty from Gemini API. Length: ${text?.length}, Content: "${text}"`);
       }
       
       return this.parseGeneratedCode(text);
@@ -70,7 +108,14 @@ class GeminiClient {
         statusText: (error as { statusText?: string }).statusText,
         details: (error as { details?: unknown }).details,
         stack: error instanceof Error ? error.stack : undefined,
+        errorType: typeof error,
+        fullError: error,
       });
+      
+      // If it's a Google API error, let's see the full structure
+      if (error && typeof error === 'object' && 'response' in error) {
+        console.error('🔍 Google API Error Response:', error);
+      }
       
       // Return mock with detailed error info for debugging
       return this.getMockWebsiteWithError(userData, error);
