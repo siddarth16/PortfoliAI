@@ -41,8 +41,8 @@ export interface Education {
   cgpa: string;
   startMonth: string;
   startYear: string;
-  endMonth: string;
-  endYear: string;
+  endMonth?: string;
+  endYear?: string;
   isPresent: boolean;
 }
 
