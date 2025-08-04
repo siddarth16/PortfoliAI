@@ -53,9 +53,10 @@ User Information:
 - Skills: ${userData.skills.join(', ')}
 
 Work Experience:
-${userData.workHistory.map(w => 
-  `- ${w.position} at ${w.company} (${w.duration})\n  Achievements: ${w.bullets.join('; ')}`
-).join('\n')}
+${userData.workHistory.map(w => {
+  const endDate = w.isPresent ? 'Present' : `${w.endMonth}/${w.endYear}`;
+  return `- ${w.position} at ${w.company} (${w.startMonth}/${w.startYear} - ${endDate})\n  Achievements: ${w.bullets.join('; ')}`;
+}).join('\n')}
 
 Projects:
 ${projectsText}

@@ -23,7 +23,11 @@ export interface UserFormData {
 export interface WorkExperience {
   position: string;
   company: string;
-  duration: string;
+  startMonth: string;
+  startYear: string;
+  endMonth?: string;
+  endYear?: string;
+  isPresent: boolean;
   bullets: string[];
 }
 

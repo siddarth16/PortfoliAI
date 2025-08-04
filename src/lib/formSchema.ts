@@ -10,7 +10,11 @@ export const basicInfoSchema = z.object({
 export const workExperienceSchema = z.object({
   position: z.string().min(2, 'Position is required'),
   company: z.string().min(2, 'Company is required'),
-  duration: z.string().min(2, 'Duration is required'),
+  startMonth: z.string().min(1, 'Start month is required'),
+  startYear: z.string().min(4, 'Start year is required'),
+  endMonth: z.string().optional(),
+  endYear: z.string().optional(),
+  isPresent: z.boolean(),
   bullets: z.array(z.string().min(1, 'Bullet point cannot be empty')).min(1, 'At least one bullet point is required'),
 });
 

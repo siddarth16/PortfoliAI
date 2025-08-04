@@ -11,6 +11,8 @@ import { Card } from '@/components/ui/card';
 import { ArrowLeft, ArrowRight, Plus, Trash2 } from 'lucide-react';
 import { workHistorySchema, WorkHistoryFormData } from '@/lib/formSchema';
 import { UserFormData } from '@/lib/types';
+import { MONTHS, getYearOptions } from '@/lib/dateConstants';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface WorkHistoryStepProps {
   formData: UserFormData;
@@ -26,11 +28,12 @@ export function WorkHistoryStep({ formData, updateFormData, onNext, onPrevious }
     formState: { errors, isValid },
     control,
     setValue,
+    watch,
   } = useForm<WorkHistoryFormData>({
     resolver: zodResolver(workHistorySchema),
     defaultValues: {
       workHistory: formData.workHistory.length > 0 ? formData.workHistory : [
-        { position: '', company: '', duration: '', bullets: [''] }
+        { position: '', company: '', startMonth: '', startYear: '', endMonth: '', endYear: '', isPresent: false, bullets: [''] }
       ],
     },
     mode: 'onChange',
@@ -47,21 +50,12 @@ export function WorkHistoryStep({ formData, updateFormData, onNext, onPrevious }
   };
 
   const addWorkExperience = () => {
-    append({ position: '', company: '', duration: '', bullets: [''] });
+    append({ position: '', company: '', startMonth: '', startYear: '', endMonth: '', endYear: '', isPresent: false, bullets: [''] });
   };
 
   const addBulletPoint = (experienceIndex: number) => {
     const currentFields = fields[experienceIndex];
     const newBullets = [...(currentFields.bullets || []), ''];
-    
-    // Update the specific field
-    const updatedFields = [...fields];
-    updatedFields[experienceIndex] = {
-      ...currentFields,
-      bullets: newBullets
-    };
-    
-    // Use setValue to update react-hook-form state
     setValue(`workHistory.${experienceIndex}.bullets`, newBullets);
   };
 
@@ -74,6 +68,21 @@ export function WorkHistoryStep({ formData, updateFormData, onNext, onPrevious }
       setValue(`workHistory.${experienceIndex}.bullets`, newBullets);
     }
   };
+
+  const togglePresent = (experienceIndex: number) => {
+    const watchedData = watch();
+    const currentData = watchedData.workHistory[experienceIndex];
+    const newValue = !currentData?.isPresent;
+    setValue(`workHistory.${experienceIndex}.isPresent`, newValue);
+    
+    if (newValue) {
+      setValue(`workHistory.${experienceIndex}.endMonth`, '');
+      setValue(`workHistory.${experienceIndex}.endYear`, '');
+    }
+  };
+
+  const watchedData = watch();
+  const yearOptions = getYearOptions();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -133,19 +142,88 @@ export function WorkHistoryStep({ formData, updateFormData, onNext, onPrevious }
               </div>
             </div>
 
-            <div className="mb-4">
-              <Label htmlFor={`duration-${experienceIndex}`}>Duration *</Label>
-              <Input
-                id={`duration-${experienceIndex}`}
-                {...register(`workHistory.${experienceIndex}.duration`)}
-                placeholder="Jan 2020 - Present"
-                className="mt-1"
-              />
-              {errors.workHistory?.[experienceIndex]?.duration && (
-                <p className="text-sm text-destructive mt-1">
-                  {errors.workHistory[experienceIndex]?.duration?.message}
-                </p>
-              )}
+            <div className="grid md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <Label>Start Date *</Label>
+                <div className="grid grid-cols-2 gap-2 mt-1">
+                  <Select onValueChange={(value) => setValue(`workHistory.${experienceIndex}.startMonth`, value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Month" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MONTHS.map((month) => (
+                        <SelectItem key={month.value} value={month.value}>
+                          {month.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select onValueChange={(value) => setValue(`workHistory.${experienceIndex}.startYear`, value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {yearOptions.map((year) => (
+                        <SelectItem key={year.value} value={year.value}>
+                          {year.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                {errors.workHistory?.[experienceIndex]?.startMonth && (
+                  <p className="text-sm text-destructive mt-1">Start month is required</p>
+                )}
+                {errors.workHistory?.[experienceIndex]?.startYear && (
+                  <p className="text-sm text-destructive mt-1">Start year is required</p>
+                )}
+              </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <Label>End Date</Label>
+                  <label className="flex items-center space-x-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={watchedData.workHistory[experienceIndex]?.isPresent || false}
+                      onChange={() => togglePresent(experienceIndex)}
+                      className="rounded"
+                    />
+                    <span>Present</span>
+                  </label>
+                </div>
+                <div className="grid grid-cols-2 gap-2 mt-1">
+                  <Select 
+                    disabled={watchedData.workHistory[experienceIndex]?.isPresent}
+                    onValueChange={(value) => setValue(`workHistory.${experienceIndex}.endMonth`, value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Month" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MONTHS.map((month) => (
+                        <SelectItem key={month.value} value={month.value}>
+                          {month.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select 
+                    disabled={watchedData.workHistory[experienceIndex]?.isPresent}
+                    onValueChange={(value) => setValue(`workHistory.${experienceIndex}.endYear`, value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {yearOptions.map((year) => (
+                        <SelectItem key={year.value} value={year.value}>
+                          {year.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </div>
 
             <div>
