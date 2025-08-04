@@ -133,64 +133,97 @@ class GeminiClient {
     ).join('\n') : 'No projects provided yet.';
 
     return `
-You are a professional web developer tasked with creating a stunning, modern personal portfolio website. This website should be production-ready and showcase the user's professional brand effectively.
+You are an expert web designer and developer. Your task is to create a stunning, COMPLETELY UNIQUE personal portfolio website that showcases true creativity and innovation.
 
-IMPORTANT: Create a completely unique design. Do NOT use templates. Generate original, modern code.
+🎯 CRITICAL DESIGN MISSION:
+${userData.referenceSite ? `
+FIRST: Study and analyze this reference website: ${userData.referenceSite}
 
-User Information:
-- Name: ${userData.name}
-- Professional Title: ${userData.title}
-- Skills: ${userData.skills.join(', ')}
+Carefully examine:
+- Layout structure and composition
+- Color palette and visual hierarchy  
+- Typography choices and font pairings
+- Navigation style and user flow
+- Visual elements and design patterns
+- Spacing, proportions, and balance
+- Interactive elements and animations
+- Overall aesthetic and mood
+
+THEN: Create an INSPIRED VARIATION that captures the essence and quality of this design while making it completely personalized for ${userData.name}.
+
+DO NOT copy exactly, but CREATE A MODERN INTERPRETATION that feels cohesive with the reference style while being distinctly unique.
+` : `
+Create a cutting-edge, innovative portfolio design that breaks away from typical templates. Focus on creating something that would impress design professionals and stand out in a competitive market.
+`}
+
+🚫 WHAT TO AVOID:
+- Generic template-like designs
+- Cookie-cutter layouts you'd find on template sites
+- Overused gradient backgrounds unless they match the reference style
+- Basic card layouts without innovation
+- Predictable sections with no creative flair
+
+✨ INNOVATION REQUIREMENTS:
+- Surprise me with creative layout solutions
+- Use unexpected but tasteful design elements
+- Create memorable visual experiences
+- Show exceptional attention to detail
+- Make every section feel intentionally designed
+
+📋 USER INFORMATION:
+Name: ${userData.name}
+Professional Title: ${userData.title}
+Skills: ${userData.skills.join(', ')}
 
 Work Experience:
 ${userData.workHistory.map(w => {
   const endDate = w.isPresent ? 'Present' : `${w.endMonth}/${w.endYear}`;
-  return `- ${w.position} at ${w.company} (${w.startMonth}/${w.startYear} - ${endDate})\n  Achievements: ${w.bullets.join('; ')}`;
+  return `- ${w.position} at ${w.company} (${w.startMonth}/${w.startYear} - ${endDate})\n  Key Achievements: ${w.bullets.join('; ')}`;
 }).join('\n')}
 
-Projects:
+Projects Portfolio:
 ${projectsText}
 
-Education:
+Educational Background:
 ${educationText}
 
-Design Inspiration: ${userData.referenceSite || 'Modern, clean design with dark theme and gradient accents'}
+🎨 DESIGN EXECUTION:
+1. **HTML Structure**: Single file with embedded CSS and JavaScript
+2. **Responsive Design**: Flawless mobile-first approach with seamless breakpoints
+3. **Performance**: Optimized loading, smooth animations, efficient code
+4. **Accessibility**: Proper semantic HTML5, ARIA labels, keyboard navigation
+5. **SEO**: Comprehensive meta tags, structured data, optimal HTML structure
 
-REQUIREMENTS:
-1. Create a single HTML file with embedded CSS and JavaScript
-2. Use a modern dark theme with gradient accents (purple/blue/pink gradients)
-3. Include smooth scrolling animations and hover effects
-4. Make it fully responsive (mobile-first approach)
-5. Use CSS Grid and Flexbox for layout
-6. Include these sections in order:
-   - Header with navigation
-   - Hero section with name, title, and call-to-action
-   - About section with a professional summary
-   - Skills section with visual skill indicators
-   - Experience section with timeline or cards
-   - Projects section with project showcases
-   - Education section
-   - Contact section with links
-7. Add subtle CSS animations and transitions
-8. Use proper semantic HTML5 elements
-9. Include responsive navigation (hamburger menu on mobile)
-10. Add proper meta tags for SEO
-11. Use modern fonts (Google Fonts)
-12. Include Font Awesome or similar icons
+🏗️ REQUIRED SECTIONS (Make Each Unique):
+- **Header/Navigation**: Creative, functional navigation that fits the design theme
+- **Hero Section**: Memorable first impression with ${userData.name}'s name and ${userData.title}
+- **About/Professional Summary**: Compelling narrative section
+- **Skills Showcase**: Innovative visual representation of technical abilities  
+- **Experience Timeline**: Creative presentation of work history
+- **Projects Gallery**: Engaging showcase of work with clear calls-to-action
+- **Education**: Elegant display of educational achievements
+- **Contact/Connect**: Professional contact information and social links
 
-DESIGN STYLE:
-- Dark background with gradient overlays
-- Cards with subtle shadows and hover effects
-- Smooth transitions and animations
-- Modern typography with good hierarchy
-- Professional color scheme
-- Clean, minimalist design
-- Interactive elements
+⚡ TECHNICAL EXCELLENCE:
+- Modern CSS (Grid, Flexbox, Custom Properties)
+- Smooth micro-interactions and purposeful animations
+- Google Fonts integration with thoughtful typography
+- Icon system (Font Awesome or SVG icons)
+- Cross-browser compatibility
+- Optimized performance
 
-OUTPUT FORMAT:
-Provide ONLY the complete HTML code starting with <!DOCTYPE html> and ending with </html>. Do not include any explanations or markdown formatting.
+🎯 OUTPUT REQUIREMENTS:
+Provide ONLY the complete HTML code starting with <!DOCTYPE html> and ending with </html>.
+No explanations, no markdown formatting, no comments outside the code.
 
-Generate a unique, modern portfolio that stands out and represents the user professionally.
+The final result should be a portfolio that:
+- Looks professionally designed by a top-tier agency
+- Reflects ${userData.name}'s personal brand and ${userData.title} expertise
+- Creates a memorable user experience
+- Demonstrates exceptional web design skills
+- Would stand out among hundreds of other portfolios
+
+Create something extraordinary that ${userData.name} would be proud to showcase to potential employers or clients.
 `;
   }
 
