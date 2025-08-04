@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, ArrowRight, Plus, X, Trash2 } from 'lucide-react';
-import { skillsEducationSchema, SkillsEducationFormData } from '@/lib/formSchema';
+import { skillsEducationSchema } from '@/lib/formSchema';
 import { UserFormData } from '@/lib/types';
 import { MONTHS, getYearOptions } from '@/lib/dateConstants';
 
@@ -32,7 +32,7 @@ export function SkillsEducationStep({ formData, updateFormData, onNext, onPrevio
     setValue,
     watch,
     control,
-  } = useForm<SkillsEducationFormData>({
+  } = useForm({
     resolver: zodResolver(skillsEducationSchema),
     defaultValues: {
       skills: formData.skills,
@@ -59,7 +59,7 @@ export function SkillsEducationStep({ formData, updateFormData, onNext, onPrevio
 
   const watchedData = watch();
 
-  const onSubmit = (data: SkillsEducationFormData) => {
+  const onSubmit = (data: { skills: string[]; education: UserFormData['education'] }) => {
     updateFormData({ ...data, skills });
     onNext();
   };

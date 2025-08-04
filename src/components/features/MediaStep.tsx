@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { ArrowLeft, ArrowRight, Upload, X, Image, Video } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Upload, X, Image as ImageIcon, Video } from 'lucide-react';
 import NextImage from 'next/image';
 import { UserFormData, MediaFile } from '@/lib/types';
 
@@ -77,7 +77,7 @@ export function MediaStep({ formData, updateFormData, onNext, onPrevious }: Medi
         {/* File Upload Section */}
         <Card className="p-6 bg-muted/30">
           <h3 className="text-xl font-semibold mb-4 flex items-center">
-            <Image className="h-5 w-5 mr-2" aria-hidden="true" />
+            <ImageIcon className="h-5 w-5 mr-2" aria-hidden="true" />
             Upload Images
           </h3>
           

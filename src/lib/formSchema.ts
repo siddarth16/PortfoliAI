@@ -40,7 +40,7 @@ export const educationSchema = z.object({
   startYear: z.string().min(4, 'Start year is required'),
   endMonth: z.string().optional(),
   endYear: z.string().optional(),
-  isPresent: z.boolean().default(false),
+  isPresent: z.boolean(),
 });
 
 // Step 4: Skills & Education
