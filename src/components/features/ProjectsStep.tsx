@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { ArrowLeft, ArrowRight, Plus, Trash2, ExternalLink, Github } from 'lucide-react';
-import { projectsSchema, ProjectsFormData } from '@/lib/formSchema';
+import { projectsSchema } from '@/lib/formSchema';
 import { UserFormData } from '@/lib/types';
 
 interface ProjectsStepProps {
@@ -39,7 +39,7 @@ export function ProjectsStep({ formData, updateFormData, onNext, onPrevious }: P
     name: 'projects',
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: { projects: UserFormData['projects'] }) => {
     // Filter out empty stack items
     const cleanedData = {
       projects: data.projects.map(project => ({

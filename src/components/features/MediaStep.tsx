@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { ArrowLeft, ArrowRight, Upload, X, Image, Video } from 'lucide-react';
+import NextImage from 'next/image';
 import { UserFormData, MediaFile } from '@/lib/types';
 
 interface MediaStepProps {
@@ -76,7 +77,7 @@ export function MediaStep({ formData, updateFormData, onNext, onPrevious }: Medi
         {/* File Upload Section */}
         <Card className="p-6 bg-muted/30">
           <h3 className="text-xl font-semibold mb-4 flex items-center">
-            <Image className="h-5 w-5 mr-2" />
+            <Image className="h-5 w-5 mr-2" aria-hidden="true" />
             Upload Images
           </h3>
           
@@ -144,11 +145,13 @@ export function MediaStep({ formData, updateFormData, onNext, onPrevious }: Medi
                   className="relative group"
                 >
                   {media.type === 'image' ? (
-                    <div className="aspect-square rounded-lg overflow-hidden bg-muted">
-                      <img
+                    <div className="aspect-square rounded-lg overflow-hidden bg-muted relative">
+                      <NextImage
                         src={media.url}
                         alt={`Uploaded media ${index + 1}`}
                         className="w-full h-full object-cover"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     </div>
                   ) : (
