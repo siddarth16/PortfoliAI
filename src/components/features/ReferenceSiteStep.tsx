@@ -220,7 +220,7 @@ export function ReferenceSiteStep({
         className="text-center pt-4"
       >
         <p className="text-sm text-primary">
-          🎉 All set! Click "Generate My Website" to create your AI-powered portfolio.
+          🎉 All set! Click &quot;Generate My Website&quot; to create your AI-powered portfolio.
         </p>
       </motion.div>
     </form>

@@ -243,7 +243,7 @@ export function SkillsEducationStep({ formData, updateFormData, onNext, onPrevio
           className="text-center pt-4"
         >
           <p className="text-sm text-primary">
-            ✓ Great! You've added {skills.length} skill{skills.length !== 1 ? 's' : ''} and your education info.
+            ✓ Great! You&apos;ve added {skills.length} skill{skills.length !== 1 ? 's' : ''} and your education info.
           </p>
         </motion.div>
       )}

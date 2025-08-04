@@ -179,7 +179,7 @@ export default function HomePage() {
                 Ready to Build Your Portfolio?
               </h2>
               <p className="text-xl text-white/90 mb-8">
-                Join thousands of professionals who've already transformed their careers with AI-powered portfolios.
+                Join thousands of professionals who&apos;ve already transformed their careers with AI-powered portfolios.
               </p>
               <Button 
                 asChild 

@@ -105,7 +105,7 @@ export default function InstructionsPage() {
               First Step: Download Your Portfolio
             </h2>
             <p className="text-muted-foreground mb-4">
-              Before deploying, make sure you've downloaded your portfolio ZIP file from the preview page.
+              Before deploying, make sure you&apos;ve downloaded your portfolio ZIP file from the preview page.
             </p>
             <Button asChild className="glow-sm">
               <Link href="/form">

@@ -109,9 +109,9 @@ export default function PreviewPage() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="p-8 text-center max-w-md">
           <h2 className="text-xl font-bold mb-4">Something went wrong</h2>
-          <p className="text-muted-foreground mb-4">
-            We couldn't generate your website. Please try again.
-          </p>
+                      <p className="text-muted-foreground mb-4">
+              We couldn&apos;t generate your website. Please try again.
+            </p>
           <Button asChild>
             <Link href="/form">Back to Form</Link>
           </Button>
@@ -263,7 +263,7 @@ export default function PreviewPage() {
           {/* Next Steps */}
           <Card className="mt-8 p-6 bg-primary/10 border-primary/20">
             <h3 className="text-xl font-semibold mb-4 flex items-center">
-              🚀 What's Next?
+              🚀 What&apos;s Next?
             </h3>
             <div className="grid md:grid-cols-2 gap-4 text-sm">
               <div>
