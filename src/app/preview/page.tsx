@@ -29,7 +29,9 @@ export default function PreviewPage() {
       generateWebsite(userData);
     } else {
       // Redirect back to form if no data
-      window.location.href = '/form';
+      if (typeof window !== 'undefined') {
+        window.location.href = '/form';
+      }
     }
   }, []);
 

@@ -4,22 +4,30 @@ import { UserFormData, GeneratedWebsite } from './types';
 class GeminiClient {
   private genAI: GoogleGenerativeAI | null = null;
   private apiKey: string | null = null;
+  private initialized: boolean = false;
 
-  constructor() {
-    // Try both client-side and server-side environment variables
+  private initializeIfNeeded() {
+    if (this.initialized) return;
+
+    // Get API key at runtime (works in production/Vercel)
     this.apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY || null;
     
     if (this.apiKey) {
       this.genAI = new GoogleGenerativeAI(this.apiKey);
       console.log('✅ Gemini API initialized successfully');
     } else {
-      console.warn('⚠️ No Gemini API key found. Checked NEXT_PUBLIC_GEMINI_API_KEY and GEMINI_API_KEY');
+      console.log('⚠️ No Gemini API key found in environment variables');
     }
+    
+    this.initialized = true;
   }
 
   async generateWebsite(userData: UserFormData): Promise<GeneratedWebsite> {
+    // Initialize at runtime, not at build time
+    this.initializeIfNeeded();
+
     if (!this.genAI || !this.apiKey) {
-      console.log('🔑 No API key configured - returning mock website');
+      console.log('🔑 No API key available - this should not happen in production');
       return this.getMockWebsite(userData);
     }
 
@@ -188,20 +196,15 @@ Generate a unique, modern portfolio that stands out and represents the user prof
         <div class="steps">
             <h3>🔧 How to Fix This:</h3>
             <ol>
-                <li><strong>Get a Gemini API Key:</strong>
-                    <br>• Go to <a href="https://ai.google.dev/" target="_blank" style="color: #4fc3f7;">Google AI Studio</a>
-                    <br>• Click "Get API Key"
-                    <br>• Create a new project or select existing
-                    <br>• Copy your API key
+                <li><strong>Production Issue:</strong>
+                    <br>• The NEXT_PUBLIC_GEMINI_API_KEY environment variable should be set in Vercel
+                    <br>• Check Vercel dashboard → Project Settings → Environment Variables
+                    <br>• Ensure the variable is set for Production environment
                 </li>
-                <li><strong>Add to Environment:</strong>
-                    <br>• Create <code>.env.local</code> file in your project root
-                    <br>• Add: <code>NEXT_PUBLIC_GEMINI_API_KEY=your_api_key_here</code>
-                    <br>• Restart your development server
-                </li>
-                <li><strong>Verify Setup:</strong>
-                    <br>• Check browser console for "✅ Gemini API initialized successfully"
-                    <br>• Try generating your portfolio again
+                <li><strong>Debug Information:</strong>
+                    <br>• API key available: ${this.apiKey ? 'Yes' : 'No'}
+                    <br>• Environment: ${typeof window !== 'undefined' ? 'Client' : 'Server'}
+                    <br>• Build time: ${new Date().toISOString()}
                 </li>
             </ol>
         </div>
@@ -303,8 +306,8 @@ Generate a unique, modern portfolio that stands out and represents the user prof
         <p>Your portfolio is ready to be generated for <span class="highlight">${userData.name}</span></p>
         
         <div class="info-box">
-            <p><strong>To generate your actual portfolio:</strong></p>
-            <p>Add your AI API key to the environment variables and your unique, personalized website will be created using advanced AI technology.</p>
+            <p><strong>API Configuration Issue:</strong></p>
+            <p>The Gemini API key is not accessible. This should not happen in production deployment.</p>
         </div>
         
         <p>The AI will create a completely custom website based on:</p>
