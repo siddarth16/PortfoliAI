@@ -28,7 +28,7 @@ export const projectSchema = z.object({
 });
 
 export const projectsSchema = z.object({
-  projects: z.array(projectSchema).optional().default([]),
+  projects: z.array(projectSchema).default([]),
 });
 
 // Education

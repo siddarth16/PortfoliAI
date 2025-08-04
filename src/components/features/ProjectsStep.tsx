@@ -23,9 +23,8 @@ export function ProjectsStep({ formData, updateFormData, onNext, onPrevious }: P
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     control,
-    watch,
     setValue,
   } = useForm<ProjectsFormData>({
     resolver: zodResolver(projectsSchema),
@@ -39,8 +38,6 @@ export function ProjectsStep({ formData, updateFormData, onNext, onPrevious }: P
     control,
     name: 'projects',
   });
-
-  const watchedData = watch();
 
   const onSubmit = (data: ProjectsFormData) => {
     // Filter out empty stack items
@@ -243,7 +240,6 @@ export function ProjectsStep({ formData, updateFormData, onNext, onPrevious }: P
         <Button
           type="submit"
           size="lg"
-          disabled={false}
           className="px-8 py-3 text-lg glow-sm group"
         >
           Continue

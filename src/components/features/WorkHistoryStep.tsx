@@ -42,8 +42,6 @@ export function WorkHistoryStep({ formData, updateFormData, onNext, onPrevious }
     name: 'workHistory',
   });
 
-  const watchedData = watch();
-
   const onSubmit = (data: WorkHistoryFormData) => {
     updateFormData(data);
     onNext();

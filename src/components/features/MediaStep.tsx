@@ -146,7 +146,7 @@ export function MediaStep({ formData, updateFormData, onNext, onPrevious }: Medi
                     <div className="aspect-square rounded-lg overflow-hidden bg-muted">
                       <img
                         src={media.url}
-                        alt={`Upload ${index + 1}`}
+                        alt={`Uploaded media ${index + 1}`}
                         className="w-full h-full object-cover"
                       />
                     </div>
