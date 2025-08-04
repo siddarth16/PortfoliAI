@@ -88,12 +88,13 @@ export function MediaStep({ formData, updateFormData, onNext, onPrevious }: Medi
               onChange={handleFileUpload}
               className="hidden"
               id="image-upload"
+              aria-label="Upload images"
             />
             <label
               htmlFor="image-upload"
               className="cursor-pointer flex flex-col items-center"
             >
-              <Upload className="h-12 w-12 text-muted-foreground mb-4" />
+              <Upload className="h-12 w-12 text-muted-foreground mb-4" aria-hidden="true" />
               <p className="text-lg font-medium mb-2">Drop images here or click to upload</p>
               <p className="text-sm text-muted-foreground">
                 PNG, JPG, GIF up to 10MB each

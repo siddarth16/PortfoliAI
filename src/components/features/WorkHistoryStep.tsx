@@ -25,7 +25,6 @@ export function WorkHistoryStep({ formData, updateFormData, onNext, onPrevious }
     handleSubmit,
     formState: { errors, isValid },
     control,
-    watch,
     setValue,
   } = useForm<WorkHistoryFormData>({
     resolver: zodResolver(workHistorySchema),

@@ -26,10 +26,10 @@ export function ProjectsStep({ formData, updateFormData, onNext, onPrevious }: P
     formState: { errors },
     control,
     setValue,
-  } = useForm<ProjectsFormData>({
+  } = useForm({
     resolver: zodResolver(projectsSchema),
     defaultValues: {
-      projects: formData.projects.length > 0 ? formData.projects : [],
+      projects: formData.projects || [],
     },
     mode: 'onChange',
   });
@@ -39,7 +39,7 @@ export function ProjectsStep({ formData, updateFormData, onNext, onPrevious }: P
     name: 'projects',
   });
 
-  const onSubmit = (data: ProjectsFormData) => {
+  const onSubmit = (data: any) => {
     // Filter out empty stack items
     const cleanedData = {
       projects: data.projects.map(project => ({
