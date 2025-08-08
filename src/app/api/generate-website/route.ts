@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
           content: prompt
         }
       ],
-      max_tokens: 4000, // Optimized for cost while ensuring complete websites
+      max_completion_tokens: 4000, // GPT-5 uses max_completion_tokens instead of max_tokens
       temperature: 0.7, // Balanced creativity
       top_p: 0.9
     });
