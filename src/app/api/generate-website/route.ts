@@ -142,8 +142,8 @@ export async function POST(request: NextRequest) {
         }
       ],
       max_completion_tokens: 4000, // GPT-5 uses max_completion_tokens instead of max_tokens
-      temperature: 0.7, // Balanced creativity
-      top_p: 0.9
+      // GPT-5 only supports default temperature (1) and top_p (1)
+      // Removed temperature and top_p parameters as they're not supported
     });
 
     console.log('✅ Received response from OpenAI');
