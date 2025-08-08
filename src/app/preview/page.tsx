@@ -9,7 +9,7 @@ import { ArrowLeft, Download, RefreshCw, Code, Eye, Sparkles, Loader2 } from 'lu
 import Link from 'next/link';
 import { CodeEditor } from '@/components/features/CodeEditor';
 import { WebsitePreview } from '@/components/features/WebsitePreview';
-import { geminiClient } from '@/lib/geminiClient';
+import { openaiClient } from '@/lib/openaiClient';
 import { downloadWebsiteAsZip } from '@/lib/zipHelper';
 import { UserFormData, GeneratedWebsite } from '@/lib/types';
 
@@ -38,7 +38,7 @@ export default function PreviewPage() {
   const generateWebsite = async (userData: UserFormData) => {
     setIsLoading(true);
     try {
-      const website = await geminiClient.generateWebsite(userData);
+      const website = await openaiClient.generateWebsite(userData);
       setGeneratedWebsite(website);
     } catch (error) {
       console.error('Error generating website:', error);
@@ -53,7 +53,7 @@ export default function PreviewPage() {
     
     setIsRegenerating(true);
     try {
-      const website = await geminiClient.generateWebsite(formData);
+      const website = await openaiClient.generateWebsite(formData);
       setGeneratedWebsite(website);
     } catch (error) {
       console.error('Error regenerating website:', error);
