@@ -35,13 +35,13 @@ class OpenAIClient {
         throw new Error('OpenAI client not initialized');
       }
 
-      console.log('🚀 Starting OpenAI GPT-4 generation...');
+      console.log('🚀 Starting OpenAI GPT-5 generation...');
       
       const prompt = this.buildPrompt(userData);
       console.log('📝 Prompt preview:', prompt.substring(0, 200) + '...');
 
       const response = await this.client.chat.completions.create({
-        model: 'gpt-4o', // Using GPT-4 Omni (most capable current model)
+        model: 'gpt-5', // Using GPT-5 (latest and most advanced model)
         messages: [
           {
             role: 'system',
