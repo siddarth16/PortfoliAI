@@ -9,7 +9,7 @@ import { ArrowLeft, Download, RefreshCw, Code, Eye, Sparkles, Loader2 } from 'lu
 import Link from 'next/link';
 import { CodeEditor } from '@/components/features/CodeEditor';
 import { WebsitePreview } from '@/components/features/WebsitePreview';
-import { openaiClient } from '@/lib/openaiClient';
+// Removed openaiClient import - now using API route
 import { downloadWebsiteAsZip } from '@/lib/zipHelper';
 import { UserFormData, GeneratedWebsite } from '@/lib/types';
 
@@ -38,7 +38,20 @@ export default function PreviewPage() {
   const generateWebsite = async (userData: UserFormData) => {
     setIsLoading(true);
     try {
-      const website = await openaiClient.generateWebsite(userData);
+      const response = await fetch('/api/generate-website', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate website');
+      }
+
+      const website: GeneratedWebsite = await response.json();
       setGeneratedWebsite(website);
     } catch (error) {
       console.error('Error generating website:', error);
@@ -53,7 +66,20 @@ export default function PreviewPage() {
     
     setIsRegenerating(true);
     try {
-      const website = await openaiClient.generateWebsite(formData);
+      const response = await fetch('/api/generate-website', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to regenerate website');
+      }
+
+      const website: GeneratedWebsite = await response.json();
       setGeneratedWebsite(website);
     } catch (error) {
       console.error('Error regenerating website:', error);
